@@ -14,7 +14,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -55,7 +57,10 @@ namespace TraversalProject
 
             });
             services.AddDbContext<Context>();
-            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddErrorDescriber<CustomIdentityValidator>().AddEntityFrameworkStores<Context>();
+            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().
+                AddErrorDescriber<CustomIdentityValidator>().
+                AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider).
+                AddEntityFrameworkStores<Context>();
             services.AddHttpClient();
             services.ContainerDependencies();
             services.AddAutoMapper(typeof(Startup));
@@ -68,8 +73,12 @@ namespace TraversalProject
                 config.Filters.Add(new AuthorizeFilter(policy));
             }
         );
-           
-            services.AddMvc();
+            services.AddLocalization(opt =>
+            {
+                opt.ResourcesPath="Resources";
+            });
+
+            services.AddMvc().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix).AddDataAnnotationsLocalization();
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Login/SignIn";
@@ -98,6 +107,9 @@ namespace TraversalProject
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            var supportedCultures = new[] { "en", "de", "tr" };
+            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[2]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseEndpoints(endpoints =>
             {
