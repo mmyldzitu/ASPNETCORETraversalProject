@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace TraversalProject.Areas.Admin.Models
+{
+    public class ExchangeViewModel
+    {
+        public string currency { get; set; }
+        public string exchange_rate_buy { get; set; }
+
+    }
+}

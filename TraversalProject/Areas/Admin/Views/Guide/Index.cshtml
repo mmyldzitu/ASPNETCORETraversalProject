@@ -1,0 +1,48 @@
+﻿@using EntityLayer.Concrete
+@model List<Guide>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int sayac = 0;
+}
+
+<h1>Rehberlerimiz</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Görsel</th>
+        <th>Ad Soyad</th>
+        <th>Açıklama</th>
+
+        <th>Durum</th>
+        <th>Düzenle</th>
+        <th>Sil</th>
+
+    </tr>
+    @foreach (var item in Model)
+    {
+        sayac += 1;
+        <tr>
+            <td>@sayac</td>
+            <td><img src="@item.ImageURL"  class="rounded-circle" height="50" width="50" /></td>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            @{ if (item.Status == true)
+                {
+                    <td><a href="/Admin/Guide/ChangeToFalse/@item.GuideID" class="btn btn-outline-danger">Pasifleştir</a></td>
+                }
+                else
+                {
+                    <td><a href="/Admin/Guide/ChangeToTrue/@item.GuideID" class="btn btn-outline-success">Aktifleştir</a></td>
+                }
+            }
+
+            <td><a href="/Admin/Guide/EditGuide/@item.GuideID" class="btn btn-outline-primary">Düzenle</a></td>
+            <td><a href="/Admin/Guide/RemoveGuide/@item.GuideID" class="btn btn-outline-dark">Sil</a></td>
+        </tr>
+    }
+
+
+</table>
+
+<a href="/Admin/Guide/AddGuide" class="btn btn-outline-dark">Yeni Rehber Ekle</a>

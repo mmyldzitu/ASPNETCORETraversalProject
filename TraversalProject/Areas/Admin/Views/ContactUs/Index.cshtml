@@ -1,0 +1,35 @@
+﻿@model List<ContactUs>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int sayac = 0;
+}
+
+<h1>Bize Ulaşın Mesajları</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>İsim</th>
+        <th>Konu</th>
+        <th>Tarih</th>
+        <th>Mesajı Aç</th>
+        <th>Sil</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        sayac++;
+        <tr>
+            
+            <td>@sayac</td>
+            <td>@item.Name</td>
+            <td>@item.Subject</td>
+            <td>@item.MessageDate.ToString("dd.MMM.yyyy")</td>
+            <td><a href="#" class="btn btn-outline-info">Mesajı Görüntüle</a></td>
+            <td><a href="#" class="btn btn-outline-danger">Sil</a></td>
+        </tr>
+    }
+
+
+</table>
+
